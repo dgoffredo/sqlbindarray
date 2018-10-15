@@ -61,21 +61,21 @@ is just 'python named parameter', and
 
 is just 'python named parameter length'.
 
-Because of this, in order to match all sequences of tokens that match a named
-parameter or named parameter length, the parser has to be a state machine. The
-machine has three states, enumerated in the `_ParserState` class. The function
-`_handle_token` takes a state value, a token, and a mapping of named parameter
-bindings, and returns a string to append to the output (or `None` if there's
-nothing to append), and a new (or possibly the same) state value. The parser
-can then iterate through input tokens, updating the state and output as
-necessary, until no input remains.
+Because of this, in order to match all sequences of tokens that match a
+named parameter or named parameter length, the parser has to be a state
+machine. The machine has three states, enumerated in the `_ParserState`
+class. The function `_handle_token` takes a state value, a token, and a
+mapping of named parameter bindings, and returns an "output operation," a
+string possibly to append to the output, and a new (or possibly the same)
+state value. The parser can then iterate through input tokens, updating the
+state and output as necessary, until no input remains.
 
 Below is a table illustrating the state transitions implemented by
 `_handle_token`:
 ```
- ---------------------------------------------------------- ------------------
-| Current State       | Token Kind         | Output     | New State           |
-| -------------       | ----------         | ------     | ---------           |
+ -----------------------------------------------------------------------------
+| Current State       | Token Kind         | Output Op  | New State           |
+| -------------       | ----------         | ---------  | ---------           |
 | CHILLIN             | python param       | FLUSH      | CHILLIN             |
 | CHILLIN             | python param len   | FLUSH      | CHILLIN             |
 | CHILLIN             | param prefix       | PUSH       | IN_PARAMETER        |
@@ -89,10 +89,8 @@ Below is a table illustrating the state transitions implemented by
 | IN_PARAMETER_LENGTH | <other>            | !!!        | !!!                 |
  ----------------------------------------------------------------------------- 
 ```
-Comment and whitespace tokens are always passed through to the output without
-affecting the state.
 
-The values of the `Output` column have the following meanings:
+The values of the "Output Op" column have the following meanings:
 
 TODO: Describe when EMIT is used and when FLUSH is used.
 """
