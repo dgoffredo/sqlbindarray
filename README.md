@@ -50,9 +50,8 @@ can be preceded by the `#` character. If preceded by the `#` character, then
 the combined expression (the hash character and the named parameter) will be
 replaced by the length of the bound value rather than by its value. This could
 be useful in this kind of situation:
-```sql
-select * from Tickets where #@teams = 0 or Team in @teams;
-```
+
+    select * from Tickets where #@teams = 0 or Team in @teams;
 
 ### Limitations
 `sqlbindarray` doesn't support date, time, or datetime python values. This
